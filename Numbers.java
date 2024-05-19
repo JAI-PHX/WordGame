@@ -5,20 +5,20 @@ import java.util.Random;
 public class Numbers {
 
     // Private static integer field named randomNum.
-    private static int randomNum;
+    private int randomNum;
 
     // One public getter and one public setter for randomNum
     // Public static int getrandomNum() is a getter for the random number, which returns the value of randomNum.
-    public static int getRandomNum() {
+    public int getRandomNum() {
 
         return randomNum;
     }
 
     // Public void setrandomNum(int randomNum) is a setter for the randomNum.
     // This setter sets the value and parameter of the randomNum field.
-    public static void setRandomNum(int randomNum) {
+    public void setRandomNum(int randomNum) {
 
-        Numbers.randomNum = randomNum;
+        this.randomNum = randomNum;
     }
 
     // Public method named generateNumber() using java.util.Random package
@@ -27,7 +27,7 @@ public class Numbers {
 
         Random random = new Random(); // Create a new instance called Random to generate a random number using the java.util package.
 
-        Numbers.randomNum = random.nextInt(101); // Generates a random specific number between 0 and 100.
+        randomNum = random.nextInt(101); // Generates a random specific number between 0 and 100.
     }
 
     // Public class method calls compareNumber(int guess) that accepts an integer as a guess and returns a true or false.

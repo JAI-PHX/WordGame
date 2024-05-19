@@ -27,7 +27,7 @@ public class GamePlay {
 
         String last_name = scanner.nextLine();
 
-        // Create an instance of Person based on user input when prompted for their last name.
+        // Create an instance of a Person based on user input when prompted for their last name.
         // Evaluates user input of last name. If the user did not user input their last name. It creates an instance of a Person using only their first name.
         // If the user inputs their last name. It will create an instance of a Person using their first and last name
         if (last_name.isEmpty()) {
