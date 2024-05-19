@@ -4,11 +4,11 @@ import java.util.Random;
 //Numbers.java class.
 public class Numbers {
 
-    // Private static integer field named randomNum.
+    // Private integer field named randomNum.
     private int randomNum;
 
     // One public getter and one public setter for randomNum
-    // Public static int getrandomNum() is a getter for the random number, which returns the value of randomNum.
+    // Public int getrandomNum() is a getter for the random number, which returns the value of randomNum.
     public int getRandomNum() {
 
         return randomNum;
