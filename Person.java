@@ -1,4 +1,3 @@
-//Person.java class.
 public class Person {
 
     // Two private String variables for storing person's first and last name.
@@ -14,7 +13,6 @@ public class Person {
     }
 
     // Public void setpersonsFirstname(String personsFirstname) is a setter for the personsFirstname.
-    // This setter sets the value and parameter of the personsFirstname field.
     public void setpersonsFirstname(String personsFirstname) {
 
         this.personsFirstname = personsFirstname;
@@ -27,7 +25,6 @@ public class Person {
     }
 
     // Public void setpersonsLastname(String personsLastname) is a setter for the personsLastname.
-    // This setter sets the value and parameter of the personsLastname field.
     public void setpersonsLastname(String personsLastname) {
 
         this.personsLastname = personsLastname;
@@ -35,7 +32,7 @@ public class Person {
 
     // Two overloaded constructors
     // Public Person(String firstName) is a constructor that takes personsFirstname and sets it to a valve of personsFirstname,
-    // while also setting the personsLastname field to a blank ("").
+    // while also setting the personsLastname field to a blank ("") if the last name is blank.
     public Person(String personsFirstname) {
 
         this.personsFirstname = personsFirstname;
