@@ -5,19 +5,20 @@ public class Hosts extends Person {
 // superclass to set the users first and last name (last name optional).
     public Hosts(String personsfirstname) {
 
+        // Calls a superclass with users-first name.
         super(personsfirstname);
     }
 
     public Hosts(String personsfirstname, String personslastname) {
 
+        // Calls a superclass with users-first and last name.
         super(personsfirstname, personslastname);
     }
 
     // Generates a random number and stores it.
     public void randomizeNum() {
 
-        Numbers numbers = new Numbers();
-
-        numbers.generateNumber();
+        // Calls the static generateNumber() from the Numbers class.
+        Numbers.generateNumber();
     }
 }
