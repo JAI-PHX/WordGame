@@ -23,7 +23,7 @@ public class Numbers {
 
     // Public method named generateNumber() using java.util.Random package
     // to generate a random number between 0 and 100 and setting the value of randomNum to the generated random number.
-    public void generateNumber() {
+    public static void generateNumber() {
 
         Random random = new Random(); // Create a new instance called Random to generate a random number using the java.util package.
 
