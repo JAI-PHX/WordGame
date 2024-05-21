@@ -26,8 +26,9 @@ public class GamePlay {
 
         // Create an instance of Person based on user input when prompted for their last name.
         // Evaluates user input of last name. If the user did not user input their last name. It creates an instance of a Person using only their first name.
-        // If the user inputs their last name. It will create an instance of a Person using their first and last name
+        // If the user inputs their last name. It will create an instance of a Person using their first and last name.
         Players player;
+
         if (last_name.isEmpty()) {
 
             // If the last name not inputted, only the first name is used.
@@ -42,24 +43,30 @@ public class GamePlay {
         // Create a new instance of the Numbers class and generate a random number.
         host.randomizeNum();
 
-        // Instance of Turn.java
         Turn turn = new Turn(1000, 200);
 
-
-        // Loop to prompt the user by name to enter a guess.
+        // Loop that prompts the user by name to enter their guess.
         boolean repeatGame = true;
+
         while (repeatGame) {
+
             boolean correctGuess = false;
+
             while (!correctGuess) {
+
                 correctGuess = turn.takeTurn(player, host);
             }
 
             System.out.print("Play another game? (y or n)\n");
+
             String reply = scanner.next();
+
             repeatGame = reply.equalsIgnoreCase("y");
 
             if (repeatGame) {
-                host.randomizeNum(); // Generate a new random number for the next game
+
+                // Generate a new random number for the next game.
+                host.randomizeNum();
             }
         }
 

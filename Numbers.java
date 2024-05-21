@@ -35,20 +35,26 @@ public class Numbers {
 
         if (guess == randomNum) {
 
-            System.out.println("Congratulations, you guessed the number!"); // If the Users guessed number is correct as the randomNum, it will return as true and
-                                                                            // Print "Congratulations, you guessed the number!"
+            // If the Users guessed number is correct as the randomNum, it will return as true and
+            // Print "Congratulations, you guessed the number!"
+            System.out.println("Congratulations, you guessed the number!");
+
             return true;
 
         } else if (guess > randomNum) {
 
-            System.out.println("I'm sorry. That guess was too high."); // If the Users guessed number is too high compared to the randomNum, it will return as false and
-                                                                       // Print "I'm sorry. That guess was too high."
+            // If the Users guessed number is too high compared to the randomNum, it will return as false and
+            // Print "I'm sorry. That guess was too high.
+            System.out.println("I'm sorry. That guess was too high.");
+
             return false;
 
         } else {
 
-            System.out.println("I'm sorry, That guess was too low.");// If the Users guessed number is too low compared to the randomNum, it will return as false and
-                                                                     // Print "I'm sorry. That guess was too low."
+            // If the Users guessed number is too low compared to the randomNum, it will return as false and
+            // Print "I'm sorry. That guess was too low."
+            System.out.println("I'm sorry, That guess was too low.");
+
             return false;
         }
     }

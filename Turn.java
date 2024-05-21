@@ -23,7 +23,9 @@ public class Turn {
 
         // Ask the user to guess a random number.
         System.out.println(host.getpersonsFirstname() + " " + host.getpersonsLastname()
+
                 + " says \"" + player.getpersonsFirstname() + (player.getpersonsLastname().isEmpty() ? "" : " "
+
                 + player.getpersonsLastname()) + ", enter your guess for my random number between 0 and 100\"");
 
         // Reads user's guess.
