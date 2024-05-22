@@ -1,41 +1,35 @@
-//Person.java class.
 public class Person {
 
-    // Two private String variables for storing person's first and last name.
+    // Two private variables for storing user's first and last names
     private String personsFirstname;
 
     private String personsLastname;
 
-    // Two public getters and two public setters for person's first and last names.
-    // Public String getpersonsFirstname() is a getter for the first name, which returns the value of personsFirstname.
+    // Getter for first name
     public String getpersonsFirstname() {
 
         return personsFirstname;
     }
 
-    // Public void setpersonsFirstname(String personsFirstname) is a setter for the personsFirstname.
-    // This setter sets the value and parameter of the personsFirstname field.
+    // Setter for first name
     public void setpersonsFirstname(String personsFirstname) {
 
         this.personsFirstname = personsFirstname;
     }
 
-    // Public String getpersonsLastname() is a getter for the last name, which returns the value of personsLastname.
+    // Getter for last name
     public String getpersonsLastname() {
 
         return personsLastname;
     }
 
-    // Public void setpersonsLastname(String personsLastname) is a setter for the personsLastname.
-    // This setter sets the value and parameter of the personsLastname field.
+    // Setter for last name
     public void setpersonsLastname(String personsLastname) {
 
         this.personsLastname = personsLastname;
     }
 
-    // Two overloaded constructors
-    // Public Person(String firstName) is a constructor that takes personsFirstname and sets it to a valve of personsFirstname,
-    // while also setting the personsLastname field to a blank ("").
+    // Constructor that takes only the first name and sets the last name to a blank string if the user does not enter a last name
     public Person(String personsFirstname) {
 
         this.personsFirstname = personsFirstname;
@@ -43,8 +37,7 @@ public class Person {
         this.personsLastname = "";
     }
 
-    // Public Person(String firstName) is a constructor that takes two Strings personsFirstname and personsLastname and sets them to
-    // personsFirstname and personsLastname.
+    // Constructor that takes both first name and last name
     public Person(String personsFirstname, String personsLastname) {
 
         this.personsFirstname = personsFirstname;
@@ -52,8 +45,3 @@ public class Person {
         this.personsLastname = personsLastname;
     }
 }
-
-
-
-
-
