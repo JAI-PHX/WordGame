@@ -1,24 +1,18 @@
-// Child class that extends Person.
 public class Players extends Person {
 
-    // private instance variable that stores users' money.
     private int money;
 
     // Public getter and setter for the amount of money.
-    // Getter.
     public int getMoney() {
 
         return money;
     }
-
-    // Setter.
     public void setMoney(int money) {
 
         this.money = money;
     }
 
-    // Constructors that initialize the money field to 1000
-    // Constructor used for user who use only their first name.
+    // Constructors initializing the money field to 1000.
     public Players(String personsFirstname) {
 
         super(personsFirstname);
@@ -26,7 +20,7 @@ public class Players extends Person {
         this.money = 1000;
     }
 
-    // Constructor used for user who uses their first and last name.
+    // Same operation as code up top but for user who imputed their first and last name
     public Players(String personsFirstname, String personsLastname) {
 
         super(personsFirstname, personsLastname);

@@ -1,4 +1,3 @@
-// Child class that extends Person.
 public class Hosts extends Person {
 
 // Two constructors that use first and last name (last name optional) which then calls a
@@ -8,10 +7,9 @@ public class Hosts extends Person {
         // Calls a superclass with users-first name.
         super(personsfirstname);
     }
-
+// Same operation as code up above but for users who use their first and last name
     public Hosts(String personsfirstname, String personslastname) {
 
-        // Calls a superclass with users-first and last name.
         super(personsfirstname, personslastname);
     }
 
