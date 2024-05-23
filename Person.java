@@ -1,47 +1,48 @@
 public class Person {
 
     // Two private variables for storing user's first and last names
-    private String personsFirstname;
+    private String firstName;
 
-    private String personsLastname;
+    private String lastName;
 
     // Getter for first name
-    public String getpersonsFirstname() {
+    public String getfirstName() {
 
-        return personsFirstname;
+        return firstName;
     }
 
     // Setter for first name
-    public void setpersonsFirstname(String personsFirstname) {
+    public void setfirstName(String firstName) {
 
-        this.personsFirstname = personsFirstname;
+        this.firstName = firstName;
     }
 
     // Getter for last name
-    public String getpersonsLastname() {
+    public String getlastName() {
 
-        return personsLastname;
+
+        return lastName;
     }
 
     // Setter for last name
-    public void setpersonsLastname(String personsLastname) {
+    public void setlastName(String lastName) {
 
-        this.personsLastname = personsLastname;
+        this.lastName = lastName;
     }
 
     // Constructor that takes only the first name and sets the last name to a blank string if the user does not enter a last name
-    public Person(String personsFirstname) {
+    public Person(String firstName) {
 
-        this.personsFirstname = personsFirstname;
+        this.firstName = firstName;
 
-        this.personsLastname = "";
+        this.lastName = "";
     }
 
     // Constructor that takes both first name and last name
-    public Person(String personsFirstname, String personsLastname) {
+    public Person(String firstName, String lastName) {
 
-        this.personsFirstname = personsFirstname;
+        this.firstName = firstName;
 
-        this.personsLastname = personsLastname;
+        this.lastName = lastName;
     }
 }

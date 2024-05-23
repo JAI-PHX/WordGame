@@ -33,6 +33,6 @@ public class Players extends Person {
 
     public String toString() {
 
-        return getpersonsFirstname() + " " + getpersonsLastname() + ": $" + money + ".00";
+        return getfirstName() + " " + getlastName() + ": $" + money + ".00";
     }
 }

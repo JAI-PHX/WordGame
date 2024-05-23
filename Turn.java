@@ -19,11 +19,11 @@ public class Turn {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(host.getpersonsFirstname() + " " + host.getpersonsLastname()
+        System.out.println(host.getfirstName() + " " + host.getlastName()
 
-                + " says \"" + player.getpersonsFirstname() + (player.getpersonsLastname().isEmpty() ? "" : " "
+                + " says \"" + player.getfirstName() + (player.getlastName().isEmpty() ? "" : " "
 
-                + player.getpersonsLastname()) + ", enter your guess for my random number between 0 and 100\"");
+                + player.getlastName()) + ", enter your guess for my random number between 0 and 100\"");
 
         int playerGuess = scanner.nextInt();
 
