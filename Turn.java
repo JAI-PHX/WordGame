@@ -1,17 +1,9 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class Turn {
 
-    private int amountForWin;
-
-    private int penalty;
-
-    // Initialize amountForWin and penalty.
-    public Turn(int amountForWin, int penalty) {
-
-        this.amountForWin = amountForWin;
-
-        this.penalty = penalty;
+    public Turn(){
     }
 
     // True or false boolean for user's guesses.
@@ -30,15 +22,28 @@ public class Turn {
         // Get the randomNum generated from Hosts.java.
         int numToGuess = Numbers.getRandomNum();
 
+        Random random = new Random();
+
+        boolean isMoneyprize = random.nextBoolean();
+
+        Award award;
+
+        if (isMoneyprize) {
+
+            award = new Money();
+        }
+        else {
+            award = new Physical();
+        }
+
         // Evaluates the user's input to see if it matches the randomNum generated.
         if (playerGuess == numToGuess) {
 
-            // If the user's guess is correct, it increases the user's money.
-            player.setMoney(player.getMoney() + amountForWin);
-
             System.out.println("Congratulations, you guessed the number!");
 
-            System.out.println("You win $" + amountForWin);
+            int wins = award.displayWinnings(player, true);
+
+            player.setMoney(player.getMoney() + wins);
 
             System.out.println(player);
 
@@ -47,13 +52,11 @@ public class Turn {
         }
         else {
 
-            // If the user's guess is wrong, it decreases the user's money.
-            player.setMoney(player.getMoney() - penalty);
-
-            // Print a message to notify the user if their guess is too low or high.
             System.out.println("I'm sorry. That guess was " + (playerGuess > numToGuess ? "too high." : "too low."));
 
-            System.out.println("You lose $" + penalty + ".00");
+            int wins = award.displayWinnings(player, false);
+
+            player.setMoney(player.getMoney() + wins);
 
             System.out.println(player);
 
