@@ -13,17 +13,17 @@ public class Players extends Person {
     }
 
     // Constructors initializing the money field to 1000.
-    public Players(String personsFirstname) {
+    public Players(String firstName) {
 
-        super(personsFirstname);
+        super(firstName);
 
         this.money = 1000;
     }
 
     // Same operation as code up top but for user who imputed their first and last name
-    public Players(String personsFirstname, String personsLastname) {
+    public Players(String firstName, String lastName) {
 
-        super(personsFirstname, personsLastname);
+        super(firstName, lastName);
 
         this.money = 1000;
     }
