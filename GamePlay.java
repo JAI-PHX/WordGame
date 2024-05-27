@@ -2,6 +2,9 @@ import java.util.Scanner;
 
 public class GamePlay {
 
+    //Player array for only 3 users
+    private Players[] currentPlayers = new Players[3];
+
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
@@ -9,35 +12,42 @@ public class GamePlay {
         // Create a new host named Bob Barker
         Hosts host = new Hosts("Bob", "Barker");
 
-        // Ask the user for the first and last name
-        System.out.print("What is your first name?\n");
+        GamePlay game = new GamePlay();
 
-        String first_name = scanner.nextLine();
+        // Loop that asks 3 players to add their name
+        for (int i = 0; i < game.currentPlayers.length; i++) {
 
-        System.out.print("Would you like to enter a last name? Leave blank if not.\n");
+            // Ask the user for the first and last name
+            System.out.printf("Player #%d, what is your first name?\n", i + 1);
 
-        String last_name = scanner.nextLine();
+            String first_name = scanner.nextLine();
 
-        // Create an instance of a Person first and last name based on their input
-        Players player;
+            System.out.print("Would you like to enter a last name? Leave blank if not.\n");
 
-        if (last_name.isEmpty()) {
+            String last_name = scanner.nextLine();
 
-            // If the last name not inputted, only the first name is used
-            player = new Players(first_name);
+            Players player;
 
-        } else {
+            if (last_name.isEmpty()) {
 
-            // If the last name is inputted, the first and last name is used
-            player = new Players(first_name, last_name);
+                // If the last name not inputted, only the first name is used
+                player = new Players(first_name);
+
+            } else {
+
+                // If the last name is inputted, the first and last name is used
+                player = new Players(first_name, last_name);
+            }
+
+            // Player array storing all 3 users in currentPlayers
+            game.currentPlayers[i] = player;
         }
-
         // Create a new instance of the Numbers class and generate a random number
         host.randomizeNum();
 
-        Turn turn = new Turn(1000, 200);
+        Turn turn = new Turn();
 
-        // Loop that asks the user to enter their guess
+        // Loop that asks the users to enter their guess every turn
         boolean repeatGame = true;
 
         while (repeatGame) {
@@ -46,9 +56,21 @@ public class GamePlay {
 
             while (!correctGuess) {
 
-                correctGuess = turn.takeTurn(player, host);
+                for (Players player : game.currentPlayers) {
+
+                    if (!correctGuess) {
+
+                        correctGuess = turn.takeTurn(player, host);
+
+                        if (correctGuess) {
+
+                            break;
+                        }
+                    }
+                }
             }
 
+            //Ask users if they want to repeat the game when a player wins
             System.out.print("Play another game? (y or n)\n");
 
             String reply = scanner.next();
