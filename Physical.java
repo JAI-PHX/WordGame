@@ -3,9 +3,7 @@ import java.util.Random;
 public class Physical implements Award {
 
     // String with 5 physical prizes when a user wins
-    private String[] physicalPrizes = {
-            "new car", "vacation to Hawaii", "Ring Alarm System", "painting", "TV"
-    };
+    private String[] physicalPrizes = {"new car", "vacation to Hawaii", "Ring Alarm System", "painting", "TV"};
 
     // Use random number to determine users prize
     private int getRandomPrize(){
@@ -23,8 +21,11 @@ public class Physical implements Award {
         String prize = physicalPrizes[prizeIndex];
 
         if (correctGuess) {
+
             System.out.printf("%s, that is correct! You won a %s!\n", player.getfirstName(), prize);
+
         } else {
+
             System.out.printf("%s, sorry, that is incorrect! If you had gotten it correct, you COULD HAVE WON a %s!\n", player.getfirstName(), prize);
         }
         return 0;

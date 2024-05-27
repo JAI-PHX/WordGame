@@ -1,4 +1,5 @@
 import java.util.Random;
+
 import java.util.Scanner;
 
 public class Turn {
@@ -33,6 +34,7 @@ public class Turn {
             award = new Money();
         }
         else {
+
             award = new Physical();
         }
 
