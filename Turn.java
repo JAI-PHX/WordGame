@@ -1,68 +1,68 @@
-import java.util.Random;
-
 import java.util.Scanner;
+import java.util.Random;
 
 public class Turn {
 
-    public Turn(){
-    }
+    Scanner scanner = new Scanner(System.in);
 
-    // True or false boolean for user's guesses.
+    Random random = new Random();
+
+    // Boolean for true or false
     public boolean takeTurn(Players player, Hosts host) {
 
-        Scanner scanner = new Scanner(System.in);
-
+        // Prompt the user by name to input their letter of choice
         System.out.println(host.getfirstName() + " " + host.getlastName()
 
                 + " says \"" + player.getfirstName() + (player.getlastName().isEmpty() ? "" : " "
 
-                + player.getlastName()) + ", enter your guess for my random number between 0 and 100\"");
+                + player.getlastName()) + ", enter your guess for a letter in my phrase\"");
 
-        int playerGuess = scanner.nextInt();
+        String playerGuess = scanner.nextLine();
 
-        // Get the randomNum generated from Hosts.java.
-        int numToGuess = Numbers.getRandomNum();
+        // Try catch block with the findLetters()
+        try {
 
-        Random random = new Random();
+            // Check user's inputted letter is in the phrase, if not declare it as false
+            Phrases.findLetters(playerGuess);
 
-        boolean isMoneyprize = random.nextBoolean();
+        } catch (MultipleLettersException e) {
 
-        Award award;
+            System.out.println(e.getMessage());
 
-        if (isMoneyprize) {
-
-            award = new Money();
-        }
-        else {
-
-            award = new Physical();
+            return false;
         }
 
-        // Evaluates the user's input to see if it matches the randomNum generated.
-        if (playerGuess == numToGuess) {
+        // Evaluates the user's inputted letters are in the phrase, if true, result in a random generated award
+        if (Phrases.gamePhrase.contains(playerGuess)) {
 
-            System.out.println("Congratulations, you guessed the number!");
+            boolean isMoneyPrize = random.nextBoolean();
+
+            Award award = isMoneyPrize ? new Money() : new Physical();
 
             int wins = award.displayWinnings(player, true);
 
             player.setMoney(player.getMoney() + wins);
 
             System.out.println(player);
+        }
+
+        // update phrase with users' correct inputted letter
+        String updatedPhrase = Phrases.getplayingPhrase();
+
+        // Print updated phrase with users inputted letters
+        if (updatedPhrase.contains("_")) {
+
+            System.out.println("The phrase to guess is: " + updatedPhrase);
+        }
+
+        // Print a congratulation message to including the player correctly filled in the phrase
+        if (!updatedPhrase.contains("_")) {
+
+            System.out.println("You solved the puzzle and won the game!");
 
             return true;
-
         }
-        else {
 
-            System.out.println("I'm sorry. That guess was " + (playerGuess > numToGuess ? "too high." : "too low."));
-
-            int wins = award.displayWinnings(player, false);
-
-            player.setMoney(player.getMoney() + wins);
-
-            System.out.println(player);
-
-            return false;
-        }
+        return false;
     }
 }

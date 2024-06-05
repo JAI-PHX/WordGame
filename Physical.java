@@ -22,7 +22,8 @@ public class Physical implements Award {
 
         if (correctGuess) {
 
-            System.out.printf("%s, that is correct! You won a %s!\n", player.getfirstName(), prize);
+            // Changed the output to uses letters instead of numbers
+            System.out.printf("%s, yes, that letter is in the phrase! You won a %s!\n", player.getfirstName(), prize);
 
         } else {
 

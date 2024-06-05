@@ -43,7 +43,7 @@ public class GamePlay {
             game.currentPlayers[i] = player;
         }
         // Create a new instance of the Numbers class and generate a random number
-        host.randomizeNum();
+        host.enterPhrase();
 
         Turn turn = new Turn();
 
@@ -71,20 +71,10 @@ public class GamePlay {
             }
 
             //Ask users if they want to repeat the game when a player wins
-            System.out.print("Play another game? (y or n)\n");
+            repeatGame = host.repeat();
 
-            String reply = scanner.next();
-
-            repeatGame = reply.equalsIgnoreCase("y");
-
-            if (repeatGame) {
-
-                // Generate a new random number for the next game
-                host.randomizeNum();
-            }
         }
 
         scanner.close();
-
     }
 }
