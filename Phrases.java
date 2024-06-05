@@ -43,10 +43,5 @@ public class Phrases {
 
         // Update the phrase to show the letter
         playingPhrase = new String(playingArray);
-
-        // Puzzle solved for player who won the game
-        if (!playingPhrase.contains("_")) {
-
-        }
     }
 }

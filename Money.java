@@ -9,7 +9,7 @@ class Money implements Award {
 
          if(correctGuess) {
 
-             System.out.printf("%s, that is correct! You won $%.1f\n", player.getfirstName(), amountWon);
+             System.out.printf("%s, yes, that letter is in the phrase! You won $%.1f\n", player.getfirstName(), amountWon);
 
              return (int) amountWon;
 
