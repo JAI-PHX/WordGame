@@ -2,6 +2,8 @@ public class Players extends Person {
 
     private int money;
 
+    private String prize;
+
     // Public getter and setter for the amount of money.
     public int getMoney() {
 
@@ -28,6 +30,13 @@ public class Players extends Person {
         this.money = 1000;
     }
 
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
     // Override the toString method to display player first and last name (last name optional) with their current amount of money.
     @Override
 
