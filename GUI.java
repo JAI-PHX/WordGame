@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+import java.awt.*;
+
 import java.util.ArrayList;
 
 import java.util.List;
@@ -11,65 +13,140 @@ public class GUI extends JFrame {
 
     private Hosts host;
 
-    // Display players through a label
+    //Display host through a label
     private JLabel playerInput;
 
     //Display host through a label
     private JLabel hostInput;
 
     // Display the phase though a label
-    private JLabel phaseinput;
+    private JLabel phaseInput;
+
+    private JTextArea messageArea;
+
+    private JCheckBox saveMessagesCheckbox;
 
     // Indicator if the game started
     private boolean gameStarted = false;
 
     private int currentPlayerIndex = 0;
 
+    // Set size of the GUI interface
     public GUI() {
 
-        // Set size of the GUI interface
         setSize(400, 300);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout());
 
-        // Label to display player, host, and phrase
+        // Setup menu bar
+        JMenuBar menuBar = createMenuBar();
+
+        setJMenuBar(menuBar);
+
+        // Setup main panel
+        JPanel mainPanel = new JPanel();
+
+        mainPanel.setLayout(new BorderLayout());
+
+        // Player and host panel
+        JPanel infoPanel = new JPanel();
+
+        infoPanel.setLayout(new GridLayout(3, 1));
+
         playerInput = new JLabel("Current Players: " + getPlayerNames());
-
-        add(playerInput);
-
-        JButton addPlayerButton = new JButton("Add Player");
-
-        addPlayerButton.addActionListener(e -> addPlayer());
-
-        add(addPlayerButton);
 
         hostInput = new JLabel("Host: ");
 
-        add(hostInput);
+        phaseInput = new JLabel("Phrase: _____");
 
-        JButton addHostButton = new JButton("Add Host");
+        infoPanel.add(playerInput);
 
-        addHostButton.addActionListener(e -> addHost());
+        infoPanel.add(hostInput);
 
-        add(addHostButton);
+        infoPanel.add(phaseInput);
 
-        phaseinput = new JLabel("Phrase: _____");
+        mainPanel.add(infoPanel, BorderLayout.NORTH);
 
-        add(phaseinput);
+        // Control panel on the top of the GUI
+        JPanel controlPanel = new JPanel();
 
-        JButton startTurnButton = new JButton("Start Turns");
+        controlPanel.setLayout(new FlowLayout());
+
+        // Start button
+        JButton startTurnButton = new JButton("Start");
 
         startTurnButton.addActionListener(e -> startTurns());
 
-        add(startTurnButton);
+        controlPanel.add(startTurnButton);
+
+        // Check box to save the messages
+        saveMessagesCheckbox = new JCheckBox("Save Messages");
+
+        saveMessagesCheckbox.setToolTipText("Click the Save box to save message, leave blank to not save messages.");
+
+        controlPanel.add(saveMessagesCheckbox);
+
+        mainPanel.add(controlPanel, BorderLayout.SOUTH);
+
+        // Output
+        messageArea = new JTextArea(15, 70);
+
+        messageArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(mainPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
+    // Menu bar
+    private JMenuBar createMenuBar() {
+
+        JMenuBar menuBar = new JMenuBar();
+
+        // Game menu
+        JMenu gameMenu = new JMenu("Game");
+
+        gameMenu.setMnemonic('G');
+
+        JMenuItem addPlayerMenuItem = new JMenuItem("Add Player");
+
+        addPlayerMenuItem.addActionListener(e -> addPlayer());
+
+        gameMenu.add(addPlayerMenuItem);
+
+        JMenuItem addHostMenuItem = new JMenuItem("Add Host");
+
+        addHostMenuItem.addActionListener(e -> addHost());
+
+        gameMenu.add(addHostMenuItem);
+
+        menuBar.add(gameMenu);
+
+        // About section of the GUi
+        JMenu aboutMenu = new JMenu("About");
+
+        aboutMenu.setMnemonic('A');
+
+        JMenuItem layoutMenuItem = new JMenuItem("Layout");
+
+        layoutMenuItem.addActionListener(e -> showLayoutInfo());
+
+        aboutMenu.add(layoutMenuItem);
+
+        menuBar.add(aboutMenu);
+
+        return menuBar;
+    }
+
     // Add players
     private void addPlayer() {
+
         String firstName = JOptionPane.showInputDialog("Enter your first name:");
 
         if (firstName != null && !firstName.trim().isEmpty()) {
@@ -83,44 +160,48 @@ public class GUI extends JFrame {
                 player = new Players(firstName);
 
             } else {
-
                 player = new Players(firstName, lastName);
-
             }
-            //Player storage
             players.add(player);
 
-            updateplayerInput();
+            updatePlayerInput();
         }
     }
 
     // Add host
     private void addHost() {
 
-        String hostName = JOptionPane.showInputDialog("Enter your host name:");
+        String firstName = JOptionPane.showInputDialog("Enter your host's first name:");
 
-        if (hostName != null && !hostName.trim().isEmpty()) {
+        if (firstName != null && !firstName.trim().isEmpty()) {
 
-            host = new Hosts(hostName);
+            String lastName = JOptionPane.showInputDialog("Enter your host's last name (optional):");
+
+            if (lastName == null || lastName.trim().isEmpty()) {
+
+                host = new Hosts(firstName);
+
+            } else {
+
+                host = new Hosts(firstName, lastName);
+            }
 
             String gamePhrase = JOptionPane.showInputDialog("Enter the game phrase:");
 
             new Phrases(gamePhrase);
 
-            //Update label
-            hostInput.setText("Host: " + host.getfirstName());
+            hostInput.setText("Host: " + host.getfirstName() + " " + host.getlastName());
 
-            updatephaseinput();
+            updatePhaseInput();
         }
     }
 
-    // Update player label
-    private void updateplayerInput() {
+    // Update user input
+    private void updatePlayerInput() {
 
         playerInput.setText("Players: " + getPlayerNames());
     }
 
-    // Display all player names
     private String getPlayerNames() {
 
         StringBuilder names = new StringBuilder();
@@ -136,24 +217,26 @@ public class GUI extends JFrame {
         return names.toString();
     }
 
-    // Update phrase
-    private void updatephaseinput() {
-
-        phaseinput.setText("Phrase: " + Phrases.getplayingPhrase());
+    // Update the phase
+    private void updatePhaseInput() {
+        phaseInput.setText("Phrase: " + Phrases.getplayingPhrase());
     }
 
+    // Start turn
     private void startTurns() {
 
         if (players.isEmpty() || host == null) {
 
-            JOptionPane.showMessageDialog(this, "Add players and a host.");
+            showMessage("Add players and a host.");
+
             return;
         }
         gameStarted = true;
+
         takeTurn();
     }
 
-    // Player turn rotation/loop
+    // Rotate players who enter their guess
     private void takeTurn() {
 
         if (!gameStarted) {
@@ -168,9 +251,9 @@ public class GUI extends JFrame {
             try {
                 Phrases.findLetters(playerGuess);
 
-                updatephaseinput();
+                updatePhaseInput();
 
-                if (Phrases.gamePhrase.contains(playerGuess)) {
+                if (Phrases.getplayingPhrase().contains(playerGuess)) {
 
                     boolean isMoneyPrize = new java.util.Random().nextBoolean();
 
@@ -182,21 +265,21 @@ public class GUI extends JFrame {
 
                         currentPlayer.setMoney(currentPlayer.getMoney() + winnings);
 
-                        JOptionPane.showMessageDialog(this, currentPlayer + " guessed correctly and won: $" + winnings +
+                        showMessage(currentPlayer + " guessed correctly and won: $" + winnings +
                                 "! The phrase is: " + Phrases.getplayingPhrase());
-
                     } else {
 
-                        JOptionPane.showMessageDialog(this, currentPlayer + " guessed correctly and won: " +
+                        showMessage(currentPlayer + " guessed correctly and won: " +
                                 currentPlayer.getPrize() + "! The phrase is: " + Phrases.getplayingPhrase());
                     }
                 } else {
 
-                    JOptionPane.showMessageDialog(this, currentPlayer.getfirstName() + " guessed incorrectly.");
+                    showMessage(currentPlayer.getfirstName() + " guessed incorrectly.");
                 }
+
                 if (!Phrases.getplayingPhrase().contains("_")) {
 
-                    JOptionPane.showMessageDialog(this, currentPlayer + " solved the puzzle and won the game!");
+                    showMessage(currentPlayer + " solved the puzzle and won the game!");
 
                     gameStarted = false;
 
@@ -210,22 +293,34 @@ public class GUI extends JFrame {
                         System.exit(0);
                     }
                 } else {
-
                     currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+
                     takeTurn();
                 }
             } catch (MultipleLettersException e) {
 
-                JOptionPane.showMessageDialog(this, e.getMessage());
+                showMessage(e.getMessage());
+
                 takeTurn();
             }
+        }
+    }
+
+    private void showMessage(String message) {
+
+        if (saveMessagesCheckbox.isSelected()) {
+
+            messageArea.append(message + "\n");
+
+        } else {
+            messageArea.setText(message);
         }
     }
 
     // Reset game
     private void resetGameState() {
 
-        phaseinput.setText("Playing Phrase: _____");
+        phaseInput.setText("Playing Phrase: _____");
 
         currentPlayerIndex = 0;
 
@@ -235,18 +330,19 @@ public class GUI extends JFrame {
 
             new Phrases(gamePhrase);
 
-            updatephaseinput();
+            updatePhaseInput();
         }
         gameStarted = true;
-
         takeTurn();
     }
 
-    //Main method
+    private void showLayoutInfo() {
+
+        JOptionPane.showMessageDialog(this, "I chosen layout for better organization and user experience since the layout is simple and straightforward.");
+    }
+
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(GUI::new);
     }
 }
-
-
-
