@@ -1,6 +1,16 @@
+import javax.sound.sampled.*;
+
 import javax.swing.*;
 
 import java.awt.*;
+
+import java.awt.event.ActionEvent;
+
+import java.awt.event.ActionListener;
+
+import java.io.File;
+
+import java.io.IOException;
 
 import java.util.ArrayList;
 
@@ -26,11 +36,6 @@ public class GUI extends JFrame {
 
     private JCheckBox saveMessagesCheckbox;
 
-    // Indicator if the game started
-    private boolean gameStarted = false;
-
-    private int currentPlayerIndex = 0;
-
     // Set size of the GUI interface
     public GUI() {
 
@@ -50,7 +55,7 @@ public class GUI extends JFrame {
 
         mainPanel.setLayout(new BorderLayout());
 
-        // Player and host panel
+        // Setup player and host panel
         JPanel infoPanel = new JPanel();
 
         infoPanel.setLayout(new GridLayout(3, 1));
@@ -84,7 +89,7 @@ public class GUI extends JFrame {
         // Check box to save the messages
         saveMessagesCheckbox = new JCheckBox("Save Messages");
 
-        saveMessagesCheckbox.setToolTipText("Click the Save box to save message, leave blank to not save messages.");
+        saveMessagesCheckbox.setToolTipText("Check to save messages.");
 
         controlPanel.add(saveMessagesCheckbox);
 
@@ -100,7 +105,6 @@ public class GUI extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         add(mainPanel, BorderLayout.CENTER);
-
         setVisible(true);
     }
 
@@ -139,6 +143,12 @@ public class GUI extends JFrame {
 
         aboutMenu.add(layoutMenuItem);
 
+        JMenuItem attributionMenuItem = new JMenuItem("Attribution");
+
+        attributionMenuItem.addActionListener(e -> showAttributionInfo());
+
+        aboutMenu.add(attributionMenuItem);
+
         menuBar.add(aboutMenu);
 
         return menuBar;
@@ -147,21 +157,16 @@ public class GUI extends JFrame {
     // Add players
     private void addPlayer() {
 
-        String firstName = JOptionPane.showInputDialog("Enter your first name:");
+        String firstName = JOptionPane.showInputDialog("Enter player's first name:");
 
         if (firstName != null && !firstName.trim().isEmpty()) {
 
-            String lastName = JOptionPane.showInputDialog("Enter your last name (optional):");
+            String lastName = JOptionPane.showInputDialog("Enter player's last name (optional):");
 
-            Players player;
+            Players player = (lastName == null || lastName.trim().isEmpty()) ?
 
-            if (lastName == null || lastName.trim().isEmpty()) {
+                    new Players(firstName) : new Players(firstName, lastName);
 
-                player = new Players(firstName);
-
-            } else {
-                player = new Players(firstName, lastName);
-            }
             players.add(player);
 
             updatePlayerInput();
@@ -171,20 +176,15 @@ public class GUI extends JFrame {
     // Add host
     private void addHost() {
 
-        String firstName = JOptionPane.showInputDialog("Enter your host's first name:");
+        String firstName = JOptionPane.showInputDialog("Enter host's first name:");
 
         if (firstName != null && !firstName.trim().isEmpty()) {
 
-            String lastName = JOptionPane.showInputDialog("Enter your host's last name (optional):");
+            String lastName = JOptionPane.showInputDialog("Enter host's last name (optional):");
 
-            if (lastName == null || lastName.trim().isEmpty()) {
+            host = (lastName == null || lastName.trim().isEmpty()) ?
 
-                host = new Hosts(firstName);
-
-            } else {
-
-                host = new Hosts(firstName, lastName);
-            }
+                    new Hosts(firstName) : new Hosts(firstName, lastName);
 
             String gamePhrase = JOptionPane.showInputDialog("Enter the game phrase:");
 
@@ -212,39 +212,40 @@ public class GUI extends JFrame {
 
                 names.append(", ");
             }
-            names.append(player.getfirstName()).append(" ").append(player.getlastName());
+            names.append(player.getfirstName());
+
+            if (player.getlastName() != null && !player.getlastName().isEmpty()) {
+
+                names.append(" ").append(player.getlastName());
+            }
         }
         return names.toString();
     }
 
     // Update the phase
     private void updatePhaseInput() {
+
         phaseInput.setText("Phrase: " + Phrases.getplayingPhrase());
     }
 
-    // Start turn
     private void startTurns() {
 
+        // Start turn
         if (players.isEmpty() || host == null) {
 
             showMessage("Add players and a host.");
 
             return;
         }
-        gameStarted = true;
-
-        takeTurn();
+        takeTurn(0);
     }
-
     // Rotate players who enter their guess
-    private void takeTurn() {
+    private void takeTurn(int currentPlayerIndex) {
 
-        if (!gameStarted) {
-            return;
-        }
+        // Take a player's turn
         Players currentPlayer = players.get(currentPlayerIndex);
 
-        String playerGuess = JOptionPane.showInputDialog(currentPlayer.getfirstName() + ", enter your guess:");
+        String playerGuess = JOptionPane.showInputDialog(currentPlayer.getfirstName() + " " + currentPlayer.getlastName() + ", enter your guess:");
 
         if (playerGuess != null && !playerGuess.trim().isEmpty()) {
 
@@ -265,23 +266,33 @@ public class GUI extends JFrame {
 
                         currentPlayer.setMoney(currentPlayer.getMoney() + winnings);
 
-                        showMessage(currentPlayer + " guessed correctly and won: $" + winnings +
+                        showMessage(currentPlayer.getfirstName() + " " + currentPlayer.getlastName() + " guessed correctly and won: $" + winnings +
+
                                 "! The phrase is: " + Phrases.getplayingPhrase());
+
+                        displayImage("money");
+
                     } else {
 
-                        showMessage(currentPlayer + " guessed correctly and won: " +
-                                currentPlayer.getPrize() + "! The phrase is: " + Phrases.getplayingPhrase());
+                        String prizeName = currentPlayer.getPrize();
+
+                        showMessage(currentPlayer.getfirstName() + " " + currentPlayer.getlastName() + " guessed correctly and won: " +
+
+                                prizeName + "! The phrase is: " + Phrases.getplayingPhrase());
+
+                        displayImage(prizeName);
                     }
                 } else {
 
-                    showMessage(currentPlayer.getfirstName() + " guessed incorrectly.");
-                }
+                    showMessage(currentPlayer.getfirstName() + " " + currentPlayer.getlastName() + " guessed incorrectly.");
 
+                    playFailureSound();
+
+                    displayBouncingGif();
+                }
                 if (!Phrases.getplayingPhrase().contains("_")) {
 
-                    showMessage(currentPlayer + " solved the puzzle and won the game!");
-
-                    gameStarted = false;
+                    showMessage(currentPlayer.getfirstName() + " " + currentPlayer.getlastName() + " solved the puzzle and won the game!");
 
                     int response = JOptionPane.showConfirmDialog(this, "Play another game?", "Game Over", JOptionPane.YES_NO_OPTION);
 
@@ -290,18 +301,20 @@ public class GUI extends JFrame {
                         resetGameState();
 
                     } else {
+
                         System.exit(0);
                     }
                 } else {
+
                     currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 
-                    takeTurn();
+                    takeTurn(currentPlayerIndex);
                 }
             } catch (MultipleLettersException e) {
 
                 showMessage(e.getMessage());
 
-                takeTurn();
+                takeTurn(currentPlayerIndex);
             }
         }
     }
@@ -313,6 +326,7 @@ public class GUI extends JFrame {
             messageArea.append(message + "\n");
 
         } else {
+
             messageArea.setText(message);
         }
     }
@@ -320,9 +334,7 @@ public class GUI extends JFrame {
     // Reset game
     private void resetGameState() {
 
-        phaseInput.setText("Playing Phrase: _____");
-
-        currentPlayerIndex = 0;
+        phaseInput.setText("Phrase: _____");
 
         String gamePhrase = JOptionPane.showInputDialog("Enter game phrase:");
 
@@ -332,13 +344,180 @@ public class GUI extends JFrame {
 
             updatePhaseInput();
         }
-        gameStarted = true;
-        takeTurn();
+        takeTurn(0);
     }
 
     private void showLayoutInfo() {
 
         JOptionPane.showMessageDialog(this, "I chosen layout for better organization and user experience since the layout is simple and straightforward.");
+    }
+
+    private void showAttributionInfo() {
+
+        JOptionPane.showMessageDialog(this, "Images I chose for my game.");
+    }
+
+
+    //PNG files of the physical rewards and losses
+    private void displayImage(String prizeName) {
+
+        String imagePath = null;
+
+        try {
+
+            switch (prizeName) {
+
+                case "Ring Alarm System":
+
+                    imagePath = "Screenshot 2024-07-07 193034.png";
+
+                    break;
+
+                case "painting":
+
+                    imagePath = "Screenshot 2024-07-07 193055.png";
+
+                    break;
+
+                case "TV":
+
+                    imagePath = "Screenshot 2024-07-07 193110.png";
+
+                    break;
+
+                case "vacation to Hawaii":
+
+                    imagePath = "Screenshot 2024-07-07 193128.png";
+
+                    break;
+
+                case "new car":
+
+                    imagePath = "Screenshot 2024-07-07 193134.png";
+
+                    break;
+
+                case "money":
+
+                    imagePath = "Screenshot 2024-07-07 195637.png";
+
+                    break;
+
+            }
+            if (imagePath != null) {
+
+                ImageIcon icon = new ImageIcon(imagePath);
+
+                JOptionPane.showMessageDialog(this, "", "Prize Won!", JOptionPane.INFORMATION_MESSAGE, icon);
+
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    //Play sound when a player guesses wrong
+    private void playFailureSound() {
+
+        try {
+
+            File soundFile = new File("412427__florianreichelt__fail-sound-effect-accoustic-guitar.wav");
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+
+            AudioFormat baseFormat = audioStream.getFormat();
+
+            AudioFormat decodedFormat = new AudioFormat(
+
+                    AudioFormat.Encoding.PCM_SIGNED,
+
+                    baseFormat.getSampleRate(),
+
+                    16,
+
+                    baseFormat.getChannels(),
+
+                    baseFormat.getChannels() * 2,
+
+                    baseFormat.getSampleRate(),
+
+                    false);
+
+            AudioInputStream decodedAudioStream = AudioSystem.getAudioInputStream(decodedFormat, audioStream);
+
+            Clip clip = AudioSystem.getClip();
+
+            clip.open(decodedAudioStream);
+
+            clip.start();
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    //Display a gif that is animated to bounce from corner to corner of the screen
+    private void displayBouncingGif() {
+
+        ImageIcon gifIcon = new ImageIcon("giphy-ezgif.com-resize.gif");
+
+        JLabel gifLabel = new JLabel(gifIcon);
+
+        // Create a box to display the GIF
+        JDialog dialog = new JDialog(this, "Failure Animation", true);
+
+        dialog.setLayout(null);
+
+        dialog.setSize(800, 600);
+
+        dialog.add(gifLabel);
+
+        gifLabel.setBounds(0, 0, gifIcon.getIconWidth(), gifIcon.getIconHeight());
+
+        //Animation timer
+        Timer animationTimer = new Timer(10, new ActionListener() {
+
+            int x = 0, y = 0;
+
+            int xSpeed = 2, ySpeed = 2;
+
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+
+                x += xSpeed;
+
+                y += ySpeed;
+
+                if (x + gifIcon.getIconWidth() > dialog.getWidth() || x < 0) {
+
+                    xSpeed = -xSpeed;
+                }
+                if (y + gifIcon.getIconHeight() > dialog.getHeight() || y < 0) {
+
+                    ySpeed = -ySpeed;
+                }
+                gifLabel.setBounds(x, y, gifIcon.getIconWidth(), gifIcon.getIconHeight());
+            }
+        });
+        animationTimer.start();
+
+        // Timer to close animation in 5 seconds
+        Timer closeTimer = new Timer(5000, e -> {
+
+            dialog.dispose();
+
+            animationTimer.stop();
+
+        });
+        closeTimer.setRepeats(false);
+
+        closeTimer.start();
+
+
+        dialog.setVisible(true);
     }
 
     public static void main(String[] args) {
